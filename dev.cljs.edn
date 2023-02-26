@@ -1,0 +1,5 @@
+^{:watch-dirs ["src/minimal_example/cljs"]
+  :target-dir "resources"
+  :open-url false}
+{:main minimal-example.cljs.web
+ :output-to "resources/public/web.js"}
