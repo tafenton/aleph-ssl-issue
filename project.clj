@@ -1,6 +1,6 @@
 (defproject minimal-example "0.1.0-SNAPSHOT"
   :description "Minimal reproducing example of resource locking issue"
-  :dependencies [[aleph "0.6.1" :exclusions [org.clojure/tools.logging]]
+  :dependencies [[aleph "0.6.1"]
                  [buddy "2.0.0"] ; not used in the example, but need BouncyCastle on classpath to generate self-signed
                                  ; certificate in JDK15+ (https://github.com/netty/netty/issues/10317)
                  [cider/piggieback "0.5.3"]
@@ -10,7 +10,7 @@
                                                                   org.eclipse.jetty/jetty-http
                                                                   org.eclipse.jetty/jetty-io
                                                                   org.eclipse.jetty/jetty-util]]
-                 [com.taoensso/sente "1.18.0-SNAPSHOT" :exclusions [org.slf4j/slf4j-api]]
+                 [com.taoensso/sente "1.17.0" :exclusions [org.slf4j/slf4j-api]]
                  [compojure "1.7.0" :exclusions [ring/ring-core]]
                  [hiccup "2.0.0-alpha2"]
                  [reagent "1.2.0"]
