@@ -1,4 +1,4 @@
-^{:watch-dirs ["src/minimal_example/cljs"]
+^{:watch-dirs ["src"]
   :target-dir "resources"
   :open-url false}
 {:main minimal-example.cljs.web
