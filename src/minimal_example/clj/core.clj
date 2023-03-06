@@ -32,6 +32,12 @@
           "Multimethod to handle Sente `event-msg`s"
           :id) ; Dispatch on event-id
 
+(defmethod -event-msg-handler :chsk/uidport-open
+  [_])
+  
+(defmethod -event-msg-handler :chsk/ws-ping
+  [_])
+
 (defmethod -event-msg-handler :default ; Default/fallback case (no other matching handler)
   [{:keys [event]}]
   (println "Unhandled event:" event))
