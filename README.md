@@ -10,4 +10,4 @@ Procedure for reproducing the issue:
 
     java.io.FileNotFoundException: (The requested operation cannot be performed on a file with a user-mapped section open)
 
-Tested in Azul Zulu 1.8 and Azul Zulu 19.0.2
+Tested in Azul Zulu 1.8, Azul Zulu 19.0.2, and Oracle Java 1.8.0_361.
