@@ -4,9 +4,7 @@
             [compojure.core :refer [defroutes GET POST]]
             [compojure.route :refer [not-found]]
             [hiccup.page :as h]
-            [ring.middleware.defaults :refer [wrap-defaults site-defaults secure-site-defaults]]
-            [taoensso.sente :as sente]
-            [taoensso.sente.server-adapters.aleph :refer [get-sch-adapter]])
+            [ring.middleware.defaults :refer [wrap-defaults site-defaults secure-site-defaults]])
   (:import [io.netty.handler.ssl SslContextBuilder]
            [io.netty.handler.ssl.util SelfSignedCertificate]))
 
@@ -14,48 +12,7 @@
 ; App state management
 ;;;
 
-(defonce app-state (atom {:web-server nil
-                          :ws-router  nil}))
-
-;;;
-; Websocket setup
-;;;
-
-(let [{:keys [ch-recv send-fn connected-uids ajax-post-fn ajax-get-or-ws-handshake-fn]} (sente/make-channel-socket! (get-sch-adapter) {})]
-  (defonce ring-ajax-post                ajax-post-fn)
-  (defonce ring-ajax-get-or-ws-handshake ajax-get-or-ws-handshake-fn)
-  (defonce ch-chsk                       ch-recv) ;; ChannelSocket's receive channel
-  (defonce chsk-send!                    send-fn) ; ChannelSocket's send API fn
-  (defonce connected-uids                connected-uids)) ; Watchable, read-only atom
-
-(defmulti -event-msg-handler
-          "Multimethod to handle Sente `event-msg`s"
-          :id) ; Dispatch on event-id
-
-(defmethod -event-msg-handler :chsk/uidport-open
-  [_])
-  
-(defmethod -event-msg-handler :chsk/ws-ping
-  [_])
-
-(defmethod -event-msg-handler :default ; Default/fallback case (no other matching handler)
-  [{:keys [event]}]
-  (println "Unhandled event:" event))
-
-(defn event-msg-handler
-  "Wraps `-event-msg-handler` with logging, error catching, etc."
-  [{:as ev-msg}]
-  (-event-msg-handler ev-msg))
-
-(defn stop-ws-router []
-  (when-let [stop-fn (:ws-router @app-state)]
-    (do (stop-fn)
-        (swap! app-state assoc :ws-router nil))))
-
-(defn start-ws-router []
-  (stop-ws-router)
-  (let [new-router (sente/start-server-chsk-router! ch-chsk event-msg-handler)]
-    (swap! app-state assoc :ws-router new-router)))
+(defonce app-state (atom {:web-server nil}))
 
 ;;;
 ; Web handler
@@ -80,8 +37,6 @@
 
 (defroutes routes
            (GET  "/"                 req (home-handler req))
-           (GET  "/chsk"             req (ring-ajax-get-or-ws-handshake req))
-           (POST "/chsk"             req (ring-ajax-post                req))
            (not-found "<h1>Page not found</h1>"))
 
 ;;;
@@ -124,11 +79,9 @@
 ;;;
 
 (defn start-dev []
-  (start-ws-router)
   (start-insecure-server)
   (browse-url "http://localhost:3000"))
 
 (defn start []
-  (start-ws-router)
   (start-secure-server)
   (browse-url "https://localhost:443"))

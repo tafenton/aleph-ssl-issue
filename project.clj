@@ -10,7 +10,6 @@
                                                                   org.eclipse.jetty/jetty-http
                                                                   org.eclipse.jetty/jetty-io
                                                                   org.eclipse.jetty/jetty-util]]
-                 [com.taoensso/sente "1.17.0" :exclusions [org.slf4j/slf4j-api]]
                  [compojure "1.7.0" :exclusions [ring/ring-core]]
                  [hiccup "2.0.0-alpha2"]
                  [reagent "1.2.0"]
